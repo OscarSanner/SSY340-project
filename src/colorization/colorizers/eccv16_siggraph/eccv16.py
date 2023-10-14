@@ -1,10 +1,9 @@
-
 import torch
 import torch.nn as nn
 import numpy as np
 from IPython import embed
 
-from .base_color import *
+from base_color import *
 
 class ECCVGenerator(BaseColor):
     def __init__(self, norm_layer=nn.BatchNorm2d):

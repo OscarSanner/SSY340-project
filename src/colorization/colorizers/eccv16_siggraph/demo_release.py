@@ -2,10 +2,16 @@
 import argparse
 import matplotlib.pyplot as plt
 
-from colorizers import *
+from eccv16 import *
+from base_color import *
+from siggraph17 import *
+from util import *
+
+# Run this from .../src/ to colorize images
+# python3 colorization/colorizers/eccv16_&_siggraph/demo_release.py -i ./test_img.png
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-i','--img_path', type=str, default='imgs/ansel_adams3.jpg')
+parser.add_argument('-i','--img_path', type=str, default='./ansel_adams.jpg')
 parser.add_argument('--use_gpu', action='store_true', help='whether to use GPU')
 parser.add_argument('-o','--save_prefix', type=str, default='saved', help='will save into this file with {eccv16.png, siggraph17.png} suffixes')
 opt = parser.parse_args()
