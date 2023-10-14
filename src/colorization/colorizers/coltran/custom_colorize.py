@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# python -m coltran.custom_colorize --config=coltran/configs/colorizer.py --logdir=coltran_weights/colorizer --img_dir=../../test_colorize/ --store_dir=coltran/out/ --mode=colorize
-# python -m coltran.custom_colorize --config=coltran/configs/color_upsampler.py --logdir=coltran_weights/color_upsampler --img_dir=../../test_colorize/ --store_dir=coltran/out/ --gen_data_dir=coltran/out/stage1 --mode=colorize
+# python -m coltran.custom_colorize --config=coltran/configs/colorizer.py         --logdir=coltran_weights/colorizer         --img_dir=../../test_colorize/ --store_dir=coltran/out/ --mode=colorize
+# python -m coltran.custom_colorize --config=coltran/configs/color_upsampler.py   --logdir=coltran_weights/color_upsampler   --img_dir=../../test_colorize/ --store_dir=coltran/out/ --gen_data_dir=coltran/out/stage1 --mode=colorize
 # python -m coltran.custom_colorize --config=coltran/configs/spatial_upsampler.py --logdir=coltran_weights/spatial_upsampler --img_dir=../../test_colorize/ --store_dir=coltran/out/ --gen_data_dir=coltran/out/stage2 --mode=colorize
 
 r"""Script to colorize or recolorize a directory of images.

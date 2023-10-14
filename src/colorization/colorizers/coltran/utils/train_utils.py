@@ -179,6 +179,8 @@ def get_ema_vars(ema, model):
 
 
 def restore(model, ckpt, ckpt_dir, ema=None):
+  if not os.path.exists(ckpt_dir):
+    raise Exception("NOOOOOOOT FOOOOOOOUND")
   if not isinstance(model, (tuple, list)):
     model, ckpt, ckpt_dir = [model], [ckpt], [ckpt_dir]
   for model_, ckpt_, ckpt_dir_ in zip(model, ckpt, ckpt_dir):

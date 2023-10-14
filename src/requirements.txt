@@ -14,5 +14,9 @@ ipython
 # For coltran
 tensorflow
 absl-py==0.10.0
-tensorflow_datasets
+tensorflow_datasets==4.8.3
 ml_collections
+
+# For gan_unet
+fastai
+torchvision

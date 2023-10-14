@@ -161,16 +161,17 @@ class ColTranCore(tf.keras.Model):
 
   def sample(self, gray_cond, mode='argmax'):
     output = {}
-
+    
     z_gray = self.encoder(gray_cond, training=False)
     if self.is_parallel_loss:
       z_logits = self.parallel_dense(z_gray)
       parallel_image = tf.argmax(z_logits, axis=-1, output_type=tf.int32)
       parallel_image = self.post_process_image(parallel_image)
-
       output['parallel'] = parallel_image
 
+    print("Got here 5")
     image, proba = self.autoregressive_sample(z_gray=z_gray, mode=mode)
+    print("Got here 6")
     output['auto_%s' % mode] = image
     output['proba'] = proba
     return output
@@ -219,13 +220,14 @@ class ColTranCore(tf.keras.Model):
     pixel_samples, pixel_probas = [], []
 
     for row in range(height):
+      print(f"Reached row {row}/{height}")
       row_cond_channel = tf.expand_dims(z_gray[:, row], axis=1)
       row_cond_upper = tf.expand_dims(upper_context[:, row], axis=1)
       row_cache.reset()
 
       gen_row, proba_row = [], []
       for col in range(width):
-
+        print(f"\t Reached col {col}/{width}")
         inner_input = (row_cache.cache, row_cond_upper, row_cond_channel)
         # computes output activations at col.
         activations = self.inner_decoder(inner_input, row_ind=row,
