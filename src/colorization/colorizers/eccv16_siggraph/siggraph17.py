@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from base_color import *
+from .base_color import *
 
 class SIGGRAPHGenerator(BaseColor):
     def __init__(self, norm_layer=nn.BatchNorm2d, classes=529):

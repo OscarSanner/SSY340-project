@@ -2,10 +2,10 @@
 import argparse
 import matplotlib.pyplot as plt
 
-from eccv16 import *
-from base_color import *
-from siggraph17 import *
-from util import *
+from .eccv16 import *
+from .base_color import *
+from .siggraph17 import *
+from .util import *
 
 # Run this from .../src/ to colorize images
 # python3 colorization/colorizers/eccv16_&_siggraph/demo_release.py -i ./test_img.png
