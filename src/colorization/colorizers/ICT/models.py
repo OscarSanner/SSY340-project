@@ -1,6 +1,6 @@
 import torch
 from torch import nn, optim
-from loss import GANLoss
+from .loss import GANLoss
 
 
 class UnetBlock(nn.Module):
@@ -140,6 +140,11 @@ class MainModel(nn.Module):
 
     def forward(self):
         self.fake_color = self.net_G(self.L)
+
+    def forward_pred(self, data):
+        self.L = data['L'].to(self.device)
+        self.ab = data['ab'].to(self.device)
+        return self.net_G(self.L).detach()
 
     def backward_D(self):
         fake_image = torch.cat([self.L, self.fake_color], dim=1)

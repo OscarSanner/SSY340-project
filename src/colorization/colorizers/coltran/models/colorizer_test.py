@@ -17,7 +17,7 @@
 from ml_collections import ConfigDict
 import numpy as np
 import tensorflow as tf
-from coltran.models import colorizer
+from . import colorizer
 
 
 class ColTranCoreTest(tf.test.TestCase):

@@ -7,9 +7,9 @@ if __name__ == '__main__':
     from torchvision.models.resnet import resnet18
     from fastai.vision.models.unet import DynamicUnet
 
-    from models import MainModel
-    from dataset import make_dataloaders
-    from utils import visualize
+    from .models import MainModel
+    from .dataset import make_dataloaders
+    from .utils import visualize
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device is: {device}")

@@ -24,7 +24,7 @@ from absl.testing import parameterized
 from ml_collections import ConfigDict
 import numpy as np
 import tensorflow as tf
-from coltran.models import layers
+from . import layers
 
 
 layer_hparams = itertools.product(["mean", "learnable"],

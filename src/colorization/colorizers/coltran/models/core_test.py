@@ -25,7 +25,7 @@ from absl.testing import parameterized
 from ml_collections import ConfigDict
 import numpy as np
 import tensorflow as tf
-from coltran.models import core
+from . import core
 
 
 def get_num_variables(model):

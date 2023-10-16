@@ -17,8 +17,8 @@
 
 from ml_collections import ConfigDict
 import tensorflow as tf
-from coltran.models import upsampler
-from coltran.utils import base_utils
+from . import upsampler
+from ..utils import base_utils
 
 
 class ColorUpsamplerTest(tf.test.TestCase):

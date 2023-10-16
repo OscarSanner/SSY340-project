@@ -22,7 +22,7 @@ from __future__ import print_function
 import itertools
 import numpy as np
 import tensorflow as tf
-from coltran.utils import base_utils
+from . import base_utils
 
 
 class UtilsTest(tf.test.TestCase):

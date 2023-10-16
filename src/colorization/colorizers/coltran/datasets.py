@@ -20,7 +20,7 @@ import os
 import re
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from coltran.utils import datasets_utils
+from .utils import datasets_utils
 
 
 def resize_to_square(image, resolution=32, train=True):

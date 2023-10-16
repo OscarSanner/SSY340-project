@@ -29,12 +29,12 @@ import numpy as np
 
 import tensorflow.compat.v2 as tf
 
-from coltran import datasets
-from coltran.models import colorizer
-from coltran.models import upsampler
-from coltran.utils import base_utils
-from coltran.utils import datasets_utils
-from coltran.utils import train_utils
+from . import datasets
+from .models import colorizer
+from .models import upsampler
+from .utils import base_utils
+from .utils import datasets_utils
+from .utils import train_utils
 
 
 # pylint: disable=g-direct-tensorflow-import

@@ -28,8 +28,8 @@ from __future__ import print_function
 
 import tensorflow.compat.v2 as tf
 from tensorflow.compat.v2.keras import layers
-from coltran.models import layers as coltran_layers
-from coltran.utils import base_utils
+from . import layers as coltran_layers
+from ..utils import base_utils
 
 
 def cond_with_context(inputs, cond_layer, context, cond_type, cond_act):

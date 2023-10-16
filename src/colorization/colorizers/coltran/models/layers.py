@@ -25,8 +25,8 @@ import operator
 import numpy as np
 import tensorflow.compat.v2 as tf
 from tensorflow.compat.v2.keras import layers
-from coltran.utils import att_utils
-from coltran.utils import base_utils
+from ..utils import att_utils
+from ..utils import base_utils
 
 # pylint: disable=duplicate-string-formatting-argument
 
