@@ -20,3 +20,6 @@ ml_collections
 # For gan_unet
 fastai
 torchvision
+
+# For weights
+gdown

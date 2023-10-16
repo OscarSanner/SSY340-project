@@ -7,13 +7,14 @@ import datetime
 import subprocess
 import sys
 
+import gdown
+
 raw_path = "./dataset/raw_color_data"
 bw_path = "./dataset/bw_data"
 gt_path = "./dataset/ground_truth"
 pred_path = "./dataset/pred_data"
 target_size = (256, 256)
 
-# 1: bw pictures -> bw_data
 
 def log(message):
     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -57,7 +58,7 @@ def process_coltran_colorize(source_path, cleanup_files=False):
 
     else:
         print("System is UNIX")
-        venv_activate_command = ["venv/bin/activate", "&&"]
+        venv_activate_command = ["source venv/bin/activate", "&&"]
         move_final_colorized_images_command = ["mv", coltran_source_dir, coltran_dest_dir]
         remove_out_command = ["rm", "-r", "colorization/colorizers/coltran/out/"]
     
@@ -92,26 +93,57 @@ def process_coltran_colorize(source_path, cleanup_files=False):
     
     # Exectution
     log("Colorizing using: coltran")
-
+    
     log("Step 1: Colorizer")
-    subprocess.run(colorize_command_step_1, check=True)
+    subprocess.run(colorize_command_step_1, check=True, shell=True, executable="/bin/bash")
 
     log("Step 2: Color upsampler")
-    subprocess.run(color_upsample_command_step_2, check=True)
+    subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash")
     
     log("Step 3: Spatial upsampler")
-    subprocess.run(spatial_upsample_command_step_3, check=True)
+    subprocess.run(spatial_upsample_command_step_3, check=True, executable="/bin/bash")
 
     log("Step 4: Moving final colorized images")
-    subprocess.run(move_final_colorized_images_command, shell=True, check=True)
+    subprocess.run(move_final_colorized_images_command, shell=True, check=True, executable="/bin/bash")
 
     if cleanup_files:
         log("Step 5: Removing files in out/...")
         subprocess.run(remove_out_command, check=True)
 
+
+def download_from_gdrive():
+    weights_ICT_path = "./colorization/colorizers/ICT/final_model_weights.pt"
+    weights_ICT_link = "https://drive.google.com/uc?id=1lR6DcS4m5InSbZ5y59zkH2mHt_4RQ2KV"
+
+    log("Downloading weights for ICT")
+    if not os.path.exists(weights_ICT_path):
+        gdown.download(weights_ICT_link, weights_ICT_path, quiet=False)
+    else:
+        print(f"Weights for ICT already exists at {weights_ICT_path}. Skipping download.")
+
+    weights_coltran_path = "./colorization/colorizers/coltran/weights"
+    coltran_intermediate_folder = "./coltran_tmp"
+
+    coltran_fetch_command = ["wget", "https://storage.googleapis.com/gresearch/coltran/coltran.zip", "-P", coltran_intermediate_folder]
+    coltran_unzip_command = ["unzip",  f"{coltran_intermediate_folder}/coltran.zip", "-d", coltran_intermediate_folder]
+    coltran_chmod_command = ["chmod", "700", f"./{coltran_intermediate_folder}/coltran"]
+    coltran_move_command = ["mv", f"{coltran_intermediate_folder}/coltran", weights_coltran_path]
+    coltran_remove_temp_command = ["rm", "-frd", coltran_intermediate_folder]
+
+    log("Downloading weights for coltran")
+    if not os.path.exists(weights_coltran_path):
+        subprocess.run(coltran_fetch_command, check=True)
+        subprocess.run(coltran_unzip_command, check=True)
+        subprocess.run(coltran_chmod_command, check=True)
+        subprocess.run(coltran_move_command, check=True)
+        subprocess.run(coltran_remove_temp_command, check=True)
+    else:
+        print(f"Weights for coltran already exists at {weights_coltran_path}. Skipping download.")
+    log("Weights for eccv16 and siggraph are downloaded when the model is instantiated.")
+
 if __name__ == "__main__":
-    # ICT_colorize(bw_path, f"{pred_path}/ICT", "colorization/colorizers/ICT")
-    process_eccv16_colorize(bw_path)
-    process_siggraph17_colorize(bw_path)
-    process_ICT_colorize(bw_path)
+    download_from_gdrive()
     process_coltran_colorize(bw_path, True)
+    # process_eccv16_colorize(bw_path)
+    # process_siggraph17_colorize(bw_path)
+    # process_ICT_colorize(bw_path)
