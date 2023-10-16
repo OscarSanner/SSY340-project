@@ -58,50 +58,25 @@ def process_coltran_colorize(source_path, cleanup_files=False):
 
     else:
         print("System is UNIX")
-        venv_activate_command = ["source venv/bin/activate", "&&"]
-        move_final_colorized_images_command = ["mv", coltran_source_dir, coltran_dest_dir]
+
+        colorize_command_step_1 = f"./pre_colorize_helpers.sh coltran_step_1 {source_path}"
+        color_upsample_command_step_2 = f"./pre_colorize_helpers.sh coltran_step_2 {source_path}"
+        spatial_upsample_command_step_3 = f"./pre_colorize_helpers.sh coltran_step_3 {source_path}"
+
+        move_final_colorized_images_command = f"mv {coltran_source_dir} {coltran_dest_dir}"
         remove_out_command = ["rm", "-r", "colorization/colorizers/coltran/out/"]
-    
-    colorize_command_step_1 = venv_activate_command + [
-        "python", "-m", "colorization.colorizers.coltran.custom_colorize",
-        "--config=colorization/colorizers/coltran/configs/colorizer.py",
-        "--logdir=colorization/colorizers/coltran/weights/colorizer",
-        f"--img_dir={source_path}",
-        "--store_dir=colorization/colorizers/coltran/out/",
-        "--mode=colorize"
-    ]
-
-    color_upsample_command_step_2 = venv_activate_command + [
-        "python", "-m", "colorization.colorizers.coltran.custom_colorize",
-        "--config=colorization/colorizers/coltran/configs/color_upsampler.py",
-        "--logdir=colorization/colorizers/coltran/weights/color_upsampler",
-        f"--img_dir={source_path}",
-        "--store_dir=colorization/colorizers/coltran/out/",
-        "--gen_data_dir=colorization/colorizers/coltran/out/stage1",
-        "--mode=colorize"
-    ]
-
-    spatial_upsample_command_step_3 = venv_activate_command + [
-        "python", "-m", "colorization.colorizers.coltran.custom_colorize",
-        "--config=colorization/colorizers/coltran/configs/spatial_upsampler.py",
-        "--logdir=colorization/colorizers/coltran/weights/spatial_upsampler",
-        f"--img_dir={source_path}",
-        "--store_dir=colorization/colorizers/coltran/out/",
-        "--gen_data_dir=colorization/colorizers/coltran/out/stage2",
-        "--mode=colorize"
-    ]
     
     # Exectution
     log("Colorizing using: coltran")
     
     log("Step 1: Colorizer")
-    subprocess.run(colorize_command_step_1, check=True, shell=True, executable="/bin/bash")
+    subprocess.run(colorize_command_step_1, check=True, executable="/bin/bash", shell=True)
 
     log("Step 2: Color upsampler")
-    subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash")
+    subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash", shell=True)
     
     log("Step 3: Spatial upsampler")
-    subprocess.run(spatial_upsample_command_step_3, check=True, executable="/bin/bash")
+    subprocess.run(spatial_upsample_command_step_3, check=True, executable="/bin/bash", shell=True)
 
     log("Step 4: Moving final colorized images")
     subprocess.run(move_final_colorized_images_command, shell=True, check=True, executable="/bin/bash")
@@ -126,7 +101,7 @@ def download_from_gdrive():
 
     coltran_fetch_command = ["wget", "https://storage.googleapis.com/gresearch/coltran/coltran.zip", "-P", coltran_intermediate_folder]
     coltran_unzip_command = ["unzip",  f"{coltran_intermediate_folder}/coltran.zip", "-d", coltran_intermediate_folder]
-    coltran_chmod_command = ["chmod", "700", f"./{coltran_intermediate_folder}/coltran"]
+    coltran_chmod_command = ["chmod", "-R", "700", f"./{coltran_intermediate_folder}/coltran"]
     coltran_move_command = ["mv", f"{coltran_intermediate_folder}/coltran", weights_coltran_path]
     coltran_remove_temp_command = ["rm", "-frd", coltran_intermediate_folder]
 
@@ -143,7 +118,8 @@ def download_from_gdrive():
 
 if __name__ == "__main__":
     download_from_gdrive()
+    prep_resized_bw_data(raw_path)
+    process_eccv16_colorize(bw_path)
+    process_siggraph17_colorize(bw_path)
+    process_ICT_colorize(bw_path)
     process_coltran_colorize(bw_path, True)
-    # process_eccv16_colorize(bw_path)
-    # process_siggraph17_colorize(bw_path)
-    # process_ICT_colorize(bw_path)
