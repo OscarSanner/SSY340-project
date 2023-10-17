@@ -9,7 +9,7 @@ import sys
 
 from tensorflow.keras import backend as K
 import torch
-
+import time
 import gdown
 
 raw_path = "./dataset/raw_color_data"
@@ -126,10 +126,56 @@ def download_from_gdrive():
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
+    # Start time for make_image_dirs
+    start_time = time.time()
     make_image_dirs()
+    end_time = time.time()
+    make_image_dirs_time = end_time - start_time
+
+    # Start time for download_from_gdrive
+    start_time = time.time()
     download_from_gdrive()
+    end_time = time.time()
+    download_from_gdrive_time = end_time - start_time
+
+    # Start time for prep_resized_bw_data
+    start_time = time.time()
     prep_resized_bw_data(raw_path)
+    end_time = time.time()
+    prep_resized_bw_data_time = end_time - start_time
+
+    # Start time for process_siggraph17_colorize
+    start_time = time.time()
     process_siggraph17_colorize(bw_path)
+    end_time = time.time()
+    process_siggraph17_colorize_time = end_time - start_time
+
+    # Start time for process_eccv16_colorize
+    start_time = time.time()
     process_eccv16_colorize(bw_path)
+    end_time = time.time()
+    process_eccv16_colorize_time = end_time - start_time
+
+    # Start time for process_ICT_colorize
+    start_time = time.time()
     process_ICT_colorize(bw_path)
+    end_time = time.time()
+    process_ICT_colorize_time = end_time - start_time
+
+    # Start time for process_coltran_colorize
+    start_time = time.time()
     process_coltran_colorize(bw_path, True)
+    end_time = time.time()
+    process_coltran_colorize_time = end_time - start_time
+
+    # Print a summary of the running times
+    print()
+    print()
+    print("\n--- Running Time Summary ---")
+    print(f"make_image_dirs: {make_image_dirs_time:.2f} seconds")
+    print(f"download_from_gdrive: {download_from_gdrive_time:.2f} seconds")
+    print(f"prep_resized_bw_data: {prep_resized_bw_data_time:.2f} seconds")
+    print(f"process_siggraph17_colorize: {process_siggraph17_colorize_time:.2f} seconds")
+    print(f"process_eccv16_colorize: {process_eccv16_colorize_time:.2f} seconds")
+    print(f"process_ICT_colorize: {process_ICT_colorize_time:.2f} seconds")
+    print(f"process_coltran_colorize: {process_coltran_colorize_time:.2f} seconds")
