@@ -71,11 +71,11 @@ def build_optimizer(config):
   optim_config = dict(config.optimizer)
   optim_type = optim_config.pop('type', 'rmsprop')
   if optim_type == 'rmsprop':
-    optimizer = tf.keras.optimizers.RMSprop(**optim_config)
+    optimizer = tf.keras.optimizers.legacy.RMSprop(**optim_config) # Update to legacy for modern tensorflow cuda support
   elif optim_type == 'adam':
-    optimizer = tf.keras.optimizers.Adam(**optim_config)
+    optimizer = tf.keras.optimizers.legacy.Adam(**optim_config) # Update to legacy for tensorflow cuda support
   elif optim_type == 'sgd':
-    optimizer = tf.keras.optimizers.SGD(**optim_config)
+    optimizer = tf.keras.optimizers.legacy.SGD(**optim_config) # Update to legacy for tensorflow cuda support
   else:
     raise ValueError('Unknown optimizer %s.' % optim_type)
   return optimizer

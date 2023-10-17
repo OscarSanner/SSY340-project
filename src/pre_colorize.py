@@ -7,6 +7,8 @@ import datetime
 import subprocess
 import sys
 
+import torch
+
 import gdown
 
 raw_path = "./dataset/raw_color_data"
@@ -50,22 +52,13 @@ def process_coltran_colorize(source_path, cleanup_files=False):
     coltran_source_dir = "colorization/colorizers/coltran/out/final/*.jpg"
     coltran_dest_dir = f"{pred_path}/coltran"
 
-    if sys.platform.startswith('win'):
-        print("System is Windows")
-        venv_activate_command = ["powershell.exe", "-Command", "./venv/Scripts/Activate.ps1", ";"]
-        move_final_colorized_images_command = ["powershell.exe", "-Command", "move", coltran_source_dir, coltran_dest_dir]
-        remove_out_command = ["powershell.exe", "-Command", f"Remove-Item -Recurse -Force 'colorization/colorizers/coltran/out/'"]
+    colorize_command_step_1 = f"./pre_colorize_helpers.sh coltran_step_1 {source_path}"
+    color_upsample_command_step_2 = f"./pre_colorize_helpers.sh coltran_step_2 {source_path}"
+    spatial_upsample_command_step_3 = f"./pre_colorize_helpers.sh coltran_step_3 {source_path}"
 
-    else:
-        print("System is UNIX")
+    move_final_colorized_images_command = f"mv {coltran_source_dir} {coltran_dest_dir}"
+    remove_out_command = ["rm", "-r", "colorization/colorizers/coltran/out/"]
 
-        colorize_command_step_1 = f"./pre_colorize_helpers.sh coltran_step_1 {source_path}"
-        color_upsample_command_step_2 = f"./pre_colorize_helpers.sh coltran_step_2 {source_path}"
-        spatial_upsample_command_step_3 = f"./pre_colorize_helpers.sh coltran_step_3 {source_path}"
-
-        move_final_colorized_images_command = f"mv {coltran_source_dir} {coltran_dest_dir}"
-        remove_out_command = ["rm", "-r", "colorization/colorizers/coltran/out/"]
-    
     # Exectution
     log("Colorizing using: coltran")
     
@@ -117,9 +110,11 @@ def download_from_gdrive():
     log("Weights for eccv16 and siggraph are downloaded when the model is instantiated.")
 
 if __name__ == "__main__":
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     download_from_gdrive()
     prep_resized_bw_data(raw_path)
-    process_eccv16_colorize(bw_path)
-    process_siggraph17_colorize(bw_path)
-    process_ICT_colorize(bw_path)
     process_coltran_colorize(bw_path, True)
+    #process_eccv16_colorize(bw_path)
+    #process_siggraph17_colorize(bw_path)
+    #process_ICT_colorize(bw_path)

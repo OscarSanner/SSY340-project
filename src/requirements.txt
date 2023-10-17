@@ -12,8 +12,8 @@ scikit-image
 ipython
 
 # For coltran
-tensorflow
-absl-py==0.10.0
+tensorflow[and-cuda]==2.14.0
+absl-py
 tensorflow_datasets==4.8.3
 ml_collections
 

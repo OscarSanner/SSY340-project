@@ -220,9 +220,7 @@ def main(_):
       prev_gen = next(gen_dataset_iter)
 
     if model_name == 'coltran_core':
-      logging.info("BEFORE")
       out = model.sample(gray_64, mode='sample')
-      logging.info("AFTER")
       samples = out['auto_sample']
     elif model_name == 'color_upsampler':
       prev_gen = base_utils.convert_bits(prev_gen, n_bits_in=8, n_bits_out=3)
