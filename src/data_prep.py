@@ -14,7 +14,7 @@ def copy_files_in_range(start_index, end_index):
     - end_index (int): End index (exclusive).
     """
     if not os.path.exists(bird_data_dir):
-        raise Exception("Can't find directory: ")
+        raise Exception("Can't find directory: {bird_data_dir}")
     
     all_files = []
     for root, _, files in os.walk(bird_data_dir):

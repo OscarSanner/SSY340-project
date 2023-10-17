@@ -128,8 +128,8 @@ if __name__ == "__main__":
     
     make_image_dirs()
     download_from_gdrive()
-    process_coltran_colorize(bw_path, True)
     prep_resized_bw_data(raw_path)
     process_siggraph17_colorize(bw_path)
     process_eccv16_colorize(bw_path)
     process_ICT_colorize(bw_path)
+    process_coltran_colorize(bw_path, True)
