@@ -169,9 +169,7 @@ class ColTranCore(tf.keras.Model):
       parallel_image = self.post_process_image(parallel_image)
       output['parallel'] = parallel_image
 
-    print("Got here 5")
     image, proba = self.autoregressive_sample(z_gray=z_gray, mode=mode)
-    print("Got here 6")
     output['auto_%s' % mode] = image
     output['proba'] = proba
     return output
