@@ -213,7 +213,8 @@ def main(_):
   num_epochs = int(np.ceil(num_files / batch_size))
   logging.info(num_epochs)
 
-  for _ in range(num_epochs):
+  for i in range(num_epochs):
+    logging.info(f"Epoch {i}/{num_epochs}")
     gray, gray_64, child_paths = next(dataset_iter)
 
     if needs_gen:
