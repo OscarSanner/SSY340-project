@@ -74,11 +74,11 @@ def process_coltran_colorize(source_path, cleanup_files=False):
     log("Colorizing using: coltran")
     
     log("Step 1: Colorizer")
-    #subprocess.run(colorize_command_step_1, check=True, executable="/bin/bash", shell=True)
+    subprocess.run(colorize_command_step_1, check=True, executable="/bin/bash", shell=True)
     K.clear_session()
 
     log("Step 2: Color upsampler")
-    #subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash", shell=True)
+    subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash", shell=True)
     K.clear_session()
     
     log("Step 3: Spatial upsampler")
