@@ -227,7 +227,7 @@ class ColTranCore(tf.keras.Model):
 
       gen_row, proba_row = [], []
       for col in range(width):
-        print(f"\t Reached col {col}/{width}")
+        # print(f"\t Reached col {col}/{width}")
         inner_input = (row_cache.cache, row_cond_upper, row_cond_channel)
         # computes output activations at col.
         activations = self.inner_decoder(inner_input, row_ind=row,
