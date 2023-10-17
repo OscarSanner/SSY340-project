@@ -27,7 +27,7 @@ def copy_files_in_range(start_index, end_index):
     print(f"Moving {len(files_to_copy)} pictures from {bird_data_dir} to {target_dir}")
 
     for idx, file_path in enumerate(files_to_copy):
-        new_file_name = f"{idx}-{os.path.basename(file_path)}"
+        new_file_name = f"{start_index + idx}-{os.path.basename(file_path)}"
         target_path = os.path.join(target_dir, new_file_name)
         
         shutil.copy(file_path, target_path)
