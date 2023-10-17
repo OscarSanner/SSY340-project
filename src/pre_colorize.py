@@ -114,7 +114,7 @@ if __name__ == "__main__":
 
     download_from_gdrive()
     prep_resized_bw_data(raw_path)
+    process_siggraph17_colorize(bw_path)
+    process_eccv16_colorize(bw_path)
+    process_ICT_colorize(bw_path)
     process_coltran_colorize(bw_path, True)
-    #process_eccv16_colorize(bw_path)
-    #process_siggraph17_colorize(bw_path)
-    #process_ICT_colorize(bw_path)
