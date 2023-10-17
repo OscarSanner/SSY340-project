@@ -169,7 +169,7 @@ def get_batch_size(name):
   if FLAGS.batch_size is not None:
     return FLAGS.batch_size
   elif 'upsampler' in name:
-    return 5
+    return 1
   return 20
 
 
@@ -212,9 +212,11 @@ def main(_):
 
   num_epochs = int(np.ceil(num_files / batch_size))
   logging.info(num_epochs)
+  logging.info(f"batch_size: {batch_size}")
+  logging.info(f"model: {model_name}")
 
   for i in range(num_epochs):
-    logging.info(f"Epoch {i}/{num_epochs}")
+    logging.info(f"Epoch {i + 1}/{num_epochs}")
     gray, gray_64, child_paths = next(dataset_iter)
 
     if needs_gen:

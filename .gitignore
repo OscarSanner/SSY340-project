@@ -2,3 +2,4 @@ venv
 'venv'
 bird_data
 coltran_weights
+__pycache__/

@@ -7,6 +7,7 @@ import datetime
 import subprocess
 import sys
 
+from tensorflow.keras import backend as K
 import torch
 
 import gdown
@@ -17,10 +18,20 @@ gt_path = "./dataset/ground_truth"
 pred_path = "./dataset/pred_data"
 target_size = (256, 256)
 
-
 def log(message):
     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"[{current_time}] {message}")
+
+def make_image_dirs():
+    log("Creating directories")
+    os.makedirs(raw_path, exist_ok=True)
+    os.makedirs(bw_path, exist_ok=True)
+    os.makedirs(gt_path, exist_ok=True)
+    os.makedirs(pred_path, exist_ok=True)
+    os.makedirs(f"{pred_path}/coltran", exist_ok=True)
+    os.makedirs(f"{pred_path}/ICT", exist_ok=True)
+    os.makedirs(f"{pred_path}/siggraph", exist_ok=True)
+    os.makedirs(f"{pred_path}/eccv16", exist_ok=True)
 
 def prep_resized_bw_data(source_path):
     for filename in os.listdir(source_path):
@@ -63,13 +74,16 @@ def process_coltran_colorize(source_path, cleanup_files=False):
     log("Colorizing using: coltran")
     
     log("Step 1: Colorizer")
-    subprocess.run(colorize_command_step_1, check=True, executable="/bin/bash", shell=True)
+    #subprocess.run(colorize_command_step_1, check=True, executable="/bin/bash", shell=True)
+    K.clear_session()
 
     log("Step 2: Color upsampler")
-    subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash", shell=True)
+    #subprocess.run(color_upsample_command_step_2, check=True, executable="/bin/bash", shell=True)
+    K.clear_session()
     
     log("Step 3: Spatial upsampler")
     subprocess.run(spatial_upsample_command_step_3, check=True, executable="/bin/bash", shell=True)
+    K.clear_session()
 
     log("Step 4: Moving final colorized images")
     subprocess.run(move_final_colorized_images_command, shell=True, check=True, executable="/bin/bash")
@@ -111,10 +125,11 @@ def download_from_gdrive():
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    
+    make_image_dirs()
     download_from_gdrive()
+    process_coltran_colorize(bw_path, True)
     prep_resized_bw_data(raw_path)
     process_siggraph17_colorize(bw_path)
     process_eccv16_colorize(bw_path)
     process_ICT_colorize(bw_path)
-    process_coltran_colorize(bw_path, True)
