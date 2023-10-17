@@ -1,5 +1,6 @@
 import os
 import shutil
+import argparse
 
 bird_data_dir = "./bird_data/CUB_200_2011/images"
 target_dir = "./dataset/raw_color_data"
@@ -31,4 +32,18 @@ def copy_files_in_range(start_index, end_index):
         
         shutil.copy(file_path, target_path)
 
-copy_files_in_range(57, 62)
+
+# Call with:   python data_prep.py -s 0 -e 256
+if __name__ == "__main__":
+    # Create an argument parser
+    parser = argparse.ArgumentParser(description="Script to process data between given indices.")
+    
+    # Add arguments
+    parser.add_argument("-s", "--start", type=int, required=True, help="Start index")
+    parser.add_argument("-e", "--end", type=int, required=True, help="End index")
+    
+    # Parse arguments
+    args = parser.parse_args()
+    
+    # Call the function with parsed arguments
+    copy_files_in_range(args.start, args.end)
