@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-from skimage.color import rgb2lab, lab2rgb
+from skimage.color import rgb2lab
 
 import torch
 import glob
@@ -14,7 +14,7 @@ from PIL import Image
 
 SIZE = 256
 
-class ColorizationDataset(Dataset):
+class ColorDataset(Dataset):
     def __init__(self, dataset_folder):
         self.transforms = transforms.Resize((SIZE, SIZE))
         # verify_dataset()

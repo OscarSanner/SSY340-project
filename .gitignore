@@ -1,5 +1,11 @@
 venv
 'venv'
 bird_data
-coltran_weights
-__pycache__/
+__pycache__
+final_model_weights.pt
+out
+weights
+dataset
+.vscode
+*.ckpt
+plot_colorization_*
