@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
     # Start time for download_from_gdrive
     start_time = time.time()
-    download_from_gdrive()
+    #download_from_gdrive()
     end_time = time.time()
     download_from_gdrive_time = end_time - start_time
 
@@ -146,25 +146,25 @@ if __name__ == "__main__":
 
     # Start time for process_siggraph17_colorize
     start_time = time.time()
-    process_siggraph17_colorize(bw_path)
+    #process_siggraph17_colorize(bw_path)
     end_time = time.time()
     process_siggraph17_colorize_time = end_time - start_time
 
     # Start time for process_eccv16_colorize
     start_time = time.time()
-    process_eccv16_colorize(bw_path)
+    #process_eccv16_colorize(bw_path)
     end_time = time.time()
     process_eccv16_colorize_time = end_time - start_time
 
     # Start time for process_ICT_colorize
     start_time = time.time()
-    process_ICT_colorize(bw_path)
+    #process_ICT_colorize(bw_path)
     end_time = time.time()
     process_ICT_colorize_time = end_time - start_time
 
     # Start time for process_coltran_colorize
     start_time = time.time()
-    process_coltran_colorize(bw_path, True)
+    #process_coltran_colorize(bw_path, True)
     end_time = time.time()
     process_coltran_colorize_time = end_time - start_time
 
@@ -173,9 +173,9 @@ if __name__ == "__main__":
     print()
     print("\n--- Running Time Summary ---")
     print(f"make_image_dirs: {make_image_dirs_time:.2f} seconds")
-    print(f"download_from_gdrive: {download_from_gdrive_time:.2f} seconds")
+    #print(f"download_from_gdrive: {download_from_gdrive_time:.2f} seconds")
     print(f"prep_resized_bw_data: {prep_resized_bw_data_time:.2f} seconds")
-    print(f"process_siggraph17_colorize: {process_siggraph17_colorize_time:.2f} seconds")
-    print(f"process_eccv16_colorize: {process_eccv16_colorize_time:.2f} seconds")
-    print(f"process_ICT_colorize: {process_ICT_colorize_time:.2f} seconds")
-    print(f"process_coltran_colorize: {process_coltran_colorize_time:.2f} seconds")
+    #print(f"process_siggraph17_colorize: {process_siggraph17_colorize_time:.2f} seconds")
+    #print(f"process_eccv16_colorize: {process_eccv16_colorize_time:.2f} seconds")
+    #print(f"process_ICT_colorize: {process_ICT_colorize_time:.2f} seconds")
+    #print(f"process_coltran_colorize: {process_coltran_colorize_time:.2f} seconds")

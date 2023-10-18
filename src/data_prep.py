@@ -2,7 +2,7 @@ import os
 import shutil
 import argparse
 
-bird_data_dir = "./bird_data/CUB_200_2011/images"
+bird_data_dir = "./CUB_200_2011/images"
 target_dir = "./dataset/raw_color_data"
 
 def copy_files_in_range(start_index, end_index):
