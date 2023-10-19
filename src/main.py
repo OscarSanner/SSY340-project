@@ -143,7 +143,7 @@ def run():
 
     # ---------------------- Prepare data ----------------------
     path_to_dataset = "dataset"
-    batch_size = 16
+    batch_size = 8
     n_workers = 8
     pin_memory = True
     shuffle_dataloader = True
