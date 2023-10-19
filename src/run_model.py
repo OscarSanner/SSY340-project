@@ -7,7 +7,7 @@ from skimage.color import rgb2lab, lab2rgb
 import numpy as np
 from torchvision import transforms
 import matplotlib.pyplot as plt
-from colorization.models import EnsembleHeadColorizer
+from colorization.models import EnsembleHeadColorizer, MeanChannelColorizer
 from piq import ssim, psnr
 
 def image_to_tensor(img_path):
@@ -53,6 +53,9 @@ def main(image_index, ckpt_path):
     saved_model.eval()
     with torch.no_grad(): 
         prediction = saved_model(input_data.unsqueeze(0)).squeeze(0)
+    
+    mean_channel_colorizer = MeanChannelColorizer()
+    mean_predicted_image = mean_channel_colorizer.forward(input_data)
     
     predicted_colorization = tensor_to_image(prediction)
     ground_truth_colorization = Image.open(ground_truth_image_path)
