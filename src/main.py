@@ -38,16 +38,16 @@ def validate(model, loss_fn, val_loader, device):
 def calc_psnr_and_ssid_for_batch(pred_batch, true_batch):
     pred_batch_rgb = torch.Tensor(lab2rgb(pred_batch.detach().cpu().numpy().transpose(0, 2, 3, 1))).permute(0,3,1,2)
     true_batch_rgb = torch.Tensor(lab2rgb(true_batch.detach().cpu().numpy().transpose(0, 2, 3, 1))).permute(0,3,1,2)
-    return psnr(pred_batch_rgb, true_batch_rgb, reduction='mean'), ssim(pred_batch_rgb, true_batch_rgb, reduction='mean'),
+    return psnr(pred_batch_rgb, true_batch_rgb, reduction='mean', data_range=255), ssim(pred_batch_rgb, true_batch_rgb, reduction='mean', data_range=255)
 
 def train_epoch(model, optimizer, loss_fn, train_loader, device):
     model.train()
     train_loss_batches, train_psnr_batches, train_ssim_batches = [], [], []
 
     for batch_index, (x, y) in enumerate(train_loader, 1):
-        #if batch_index % (len(train_loader) // 5) == 0:
-        #    logging.info(f"Batch {batch_index}/{len(train_loader)}")
-        logging.info(f"Batch {batch_index}/{len(train_loader)}")
+        if batch_index % (len(train_loader) // 5) == 0:
+           logging.info(f"Batch {batch_index}/{len(train_loader)}")
+        #logging.info(f"Batch {batch_index}/{len(train_loader)}")
 
         input_imgs, true_img = x.to(device), y.to(device)
         optimizer.zero_grad()
@@ -82,6 +82,10 @@ def training_loop(
             f"Epoch {epoch}/{num_epochs}: \t"
             f"Train loss: {sum(train_loss)/len(train_loss):.3f}, \t"
             f"Val. loss: {val_loss:.3f}, "
+            f"Train PSNR: {sum(train_psnr_res)/len(train_psnr_res):.3f}, \t"
+            f"Val. PSNR: {val_psnr:.3f}, "
+            f"Train SSIM: {sum(train_ssim)/len(train_ssim):.3f}, \t"
+            f"Val. SSIM: {val_ssim:.3f}, "
         )
 
         train_losses.extend(train_loss)

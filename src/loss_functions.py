@@ -24,6 +24,6 @@ class PerceptualLoss(nn.Module):
         mse_l = mse_loss(x, y)
         l1_l = l1_loss(x,y)
 
-        mse_scaling_factor = 0.2
+        mse_scaling_factor = 0.15
         tot_l = vgg_mse_l + l1_l + (mse_scaling_factor * mse_l)
         return tot_l

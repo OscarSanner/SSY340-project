@@ -50,4 +50,5 @@ class ColorDataset(Dataset):
         rgb_img = img.convert("RGB")
         npa_img = np.array(rgb_img)
         lab_img = rgb2lab(npa_img).astype("float32")
-        return transforms.ToTensor()(lab_img)
+        lab_img_transposed = lab_img.transpose((2, 0, 1))
+        return torch.Tensor(lab_img_transposed)
