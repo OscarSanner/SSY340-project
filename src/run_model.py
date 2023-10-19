@@ -52,7 +52,7 @@ def main(image_index, ckpt_path):
 
     saved_model.eval()
     with torch.no_grad(): 
-        prediction = saved_model(input_data)
+        prediction = saved_model(input_data.unsqueeze(0)).squeeze(0)
     
     predicted_colorization = tensor_to_image(prediction)
     ground_truth_colorization = Image.open(ground_truth_image_path)
