@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-from skimage.color import rgb2lab
+from skimage.color import rgb2lab, lab2rgb
 
 import torch
 import glob
@@ -36,12 +36,10 @@ class ColorDataset(Dataset):
         coltran_tensor = self._retrieve_image(f"{self.coltran_path}/{file_name}")
 
         input_data = torch.cat((eccv16_tensor, siggraph_tensor, ICT_tensor, coltran_tensor), axis=0)
-
         true_data = self._retrieve_image(f"{self.ground_truth_path}/{file_name}")
 
         # Shape of input_data: torch.Size([12, 256, 256])
         # Shape of true_data: torch.Size([3, 256, 256])
-
         return input_data, true_data
 
     def __len__(self):

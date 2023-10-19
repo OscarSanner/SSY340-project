@@ -8,6 +8,7 @@ import numpy as np
 from torchvision import transforms
 import matplotlib.pyplot as plt
 from colorization.models import EnsembleHeadColorizer
+from piq import ssim, psnr
 
 def image_to_tensor(img_path):
     img = Image.open(img_path)
@@ -61,23 +62,6 @@ def main(image_index, ckpt_path):
     eccv16_colorization = Image.open(eccv16_image_path)
     siggraph_colorization = Image.open(siggraph_image_path)
 
-    '''
-    images = [predicted_colorization, ground_truth_colorization, bw_colorization, coltran_colorization, 
-          ICT_colorization, eccv16_colorization, siggraph_colorization]
-    titles = ["Predicted", "Ground Truth", "BW", "Coltran", "ICT", "ECCV16", "SIGGRAPH"]
-    plt.figure(figsize=(20, 10)) 
-
-    for i, (img, title) in enumerate(zip(images, titles)):
-        plt.subplot(1, 7, i + 1)
-        plt.imshow(img)
-        plt.title(title)
-        plt.axis('off') 
-
-    plt.tight_layout()
-    plt.savefig('path_to_save_figure.png')
-    # plt.show()
-    '''
-
     # Setting up the images and titles
     images = [
         bw_colorization,
@@ -100,9 +84,8 @@ def main(image_index, ckpt_path):
         ax.axis('off')
 
     # Plot BW image on the top center
-    axs[0, 2].imshow(images[0])
+    axs[0, 2].imshow(images[0], cmap='gray')
     axs[0, 2].set_title(titles[0])
-    axs[0, 2].axis('on')
 
     # Plot the four images below the BW image
     for i in range(1, 5):
@@ -114,12 +97,10 @@ def main(image_index, ckpt_path):
     # Plot the predicted_colorization in the center of the third row
     axs[2, 2].imshow(images[5])
     axs[2, 2].set_title(titles[5])
-    axs[2, 2].axis('on')
 
     # Plot the ground_truth_colorization next to the predicted image
     axs[2, 3].imshow(images[6])
     axs[2, 3].set_title(titles[6])
-    axs[2, 3].axis('on')
 
     plt.tight_layout()
 
@@ -133,5 +114,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process an image based on its index.")
     parser.add_argument("-i", "--image_index", type=int, required=True, help="Index of the image to colorize")
     parser.add_argument("-c", "--ckpt_path", type=str, required=True, help="Path to the model (.ckpt) file.")
+
     args = parser.parse_args()
     main(args.image_index, args.ckpt_path)
