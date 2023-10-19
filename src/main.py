@@ -82,7 +82,7 @@ def training_loop(
             f"Epoch {epoch}/{num_epochs}: \t"
             f"Train loss: {sum(train_loss)/len(train_loss):.3f}, \t"
             f"Val. loss: {val_loss:.3f}, "
-            f"Train PSNR: {sum(train_psnr_res)/len(train_psnr_res):.3f}, \t"
+            f"Train PSNR: {sum(train_psnr)/len(train_psnr):.3f}, \t"
             f"Val. PSNR: {val_psnr:.3f}, "
             f"Train SSIM: {sum(train_ssim)/len(train_ssim):.3f}, \t"
             f"Val. SSIM: {val_ssim:.3f}, "
