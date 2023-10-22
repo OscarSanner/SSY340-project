@@ -34,11 +34,11 @@ def main(image_index, ckpt_path):
         raise FileNotFoundError(f"The provided checkpoint file '{ckpt_path}' does not exist.")
 
     ground_truth_image_path = glob.glob(f"dataset/ground_truth/{image_index}-*")[0]
-    bw_image_path = glob.glob(f"dataset/bw_data/{image_index + 1}-*")[0]
-    coltran_image_path = glob.glob(f"dataset/pred_data/coltran/{image_index + 2}-*")[0]
-    ICT_image_path = glob.glob(f"dataset/pred_data/ICT/{image_index + 3}-*")[0]
-    eccv16_image_path = glob.glob(f"dataset/pred_data/eccv16/{image_index + 4}-*")[0]
-    siggraph_image_path = glob.glob(f"dataset/pred_data/siggraph/{image_index + 5}-*")[0]
+    bw_image_path = glob.glob(f"dataset/bw_data/{image_index}-*")[0]
+    coltran_image_path = glob.glob(f"dataset/pred_data/coltran/{image_index}-*")[0]
+    ICT_image_path = glob.glob(f"dataset/pred_data/ICT/{image_index}-*")[0]
+    eccv16_image_path = glob.glob(f"dataset/pred_data/eccv16/{image_index}-*")[0]
+    siggraph_image_path = glob.glob(f"dataset/pred_data/siggraph/{image_index}-*")[0]
 
     checkpoint = torch.load(ckpt_path)
     saved_model = EnsembleHeadColorizer()
@@ -52,9 +52,12 @@ def main(image_index, ckpt_path):
 
     saved_model.eval()
     with torch.no_grad(): 
-        prediction = saved_model(input_data.unsqueeze(0)).squeeze(0)
+        mean_channel_colorizer = MeanChannelColorizer()
+        avg = mean_channel_colorizer.forward(input_data)
+        prediction = saved_model.forward(input_data)
     
     predicted_colorization = tensor_to_image(prediction)
+    avg_colorization = tensor_to_image(avg)
     ground_truth_colorization = Image.open(ground_truth_image_path)
     bw_colorization = Image.open(bw_image_path)
     coltran_colorization = Image.open(coltran_image_path)
@@ -64,48 +67,40 @@ def main(image_index, ckpt_path):
 
     # Setting up the images and titles
     images = [
-        bw_colorization,
-        coltran_colorization, 
-        ICT_colorization, 
         eccv16_colorization, 
         siggraph_colorization,
-        predicted_colorization,
-        ground_truth_colorization
+        ICT_colorization, 
+        coltran_colorization,
+        bw_colorization,
+        ground_truth_colorization,
+        avg_colorization,
+        predicted_colorization
     ]
 
-    titles = ["BW", "Coltran", "ICT", "ECCV16", "SIGGRAPH", "Predicted", "Ground Truth"]
+    # Create a figure with 2x4 subplots
+    fig, axes = plt.subplots(2, 4, figsize=(15, 8))
 
-    # Create a figure with custom size
-    fig, axs = plt.subplots(3, 5, figsize=(20, 15))
-    fig.subplots_adjust(wspace=0.3, hspace=0.3)  # Adjust the spacing between subplots
+    # Flatten axes for easy indexing
+    axes = axes.flatten()
 
-    # Hide all axes at first
-    for ax in axs.ravel():
+    # Titles for each subplot
+    titles = [
+        "ECCV16", "Siggraph", "U-Net/GAN", "Coltran",
+        "Grayscale", "Ground Truth", "Average", "Ensamble"
+    ]
+
+    # Display each image in a subplot
+    for ax, img, title in zip(axes, images, titles):
+        if title == "Grayscale":
+            ax.imshow(img, cmap='gray')
+        else:
+            ax.imshow(img)
+        ax.set_title(title)
         ax.axis('off')
 
-    # Plot BW image on the top center
-    axs[0, 2].imshow(images[0], cmap='gray')
-    axs[0, 2].set_title(titles[0])
-
-    # Plot the four images below the BW image
-    for i in range(1, 5):
-        axs[1, i-1].imshow(images[i])
-        axs[1, i-1].set_title(titles[i])
-        axs[1, i-1].axis('on')
-
-
-    # Plot the predicted_colorization in the center of the third row
-    axs[2, 2].imshow(images[5])
-    axs[2, 2].set_title(titles[5])
-
-    # Plot the ground_truth_colorization next to the predicted image
-    axs[2, 3].imshow(images[6])
-    axs[2, 3].set_title(titles[6])
-
+    # Show the entire figure
     plt.tight_layout()
-
-    image_name = ground_truth_image_path.split("/")[-1]
-    plt.savefig(f"plot_colorization_{image_name}.png")
+    plt.show()
 
 
 # Example:

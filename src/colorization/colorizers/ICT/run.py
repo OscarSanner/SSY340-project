@@ -12,7 +12,6 @@ if __name__ == '__main__':
     from .utils import visualize
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    device = "cpu"
     print(f"Device is: {device}")
 
     paths = glob.glob("/Users/osann/Documents/GitProjects/SSY340-project/src/test_colorize/*.jpg")

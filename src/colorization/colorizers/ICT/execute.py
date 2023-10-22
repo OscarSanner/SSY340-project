@@ -12,7 +12,6 @@ from .dataset import make_dataloaders
 from .utils import visualize, lab_to_rgb
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = "cpu"
 print(f"Device is: {device}")
 
 def ICT_colorize(source_folder, destination_folder, weights_path, use_gpu=False):

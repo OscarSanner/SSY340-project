@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
     # Start time for download_from_gdrive
     start_time = time.time()
-    #download_from_gdrive()
+    download_from_gdrive()
     end_time = time.time()
     download_from_gdrive_time = end_time - start_time
 
@@ -158,7 +158,7 @@ if __name__ == "__main__":
 
     # Start time for process_ICT_colorize
     start_time = time.time()
-    #process_ICT_colorize(bw_path)
+    process_ICT_colorize(bw_path)
     end_time = time.time()
     process_ICT_colorize_time = end_time - start_time
 
