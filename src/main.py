@@ -13,11 +13,6 @@ import matplotlib.pyplot as plt
 from skimage.color import lab2rgb
 from piq import ssim, psnr
 
-
-logging.basicConfig(
-    format="[%(asctime)s] - %(message)s", datefmt="%H:%M:%S", level=logging.INFO
-)
-
 def validate(model, loss_fn, val_loader, device):
     val_loss_cum, val_psnr_cum, val_ssim_cum = 0, 0, 0
     model.eval()

@@ -10,19 +10,6 @@ import matplotlib.pyplot as plt
 from colorization.models import EnsembleHeadColorizer, MeanChannelColorizer
 from piq import ssim, psnr
 
-def image_to_tensor(img_path):
-    img = Image.open(img_path)
-    rgb_img = img.convert("RGB")
-    npa_img = np.array(rgb_img)
-    lab_img = rgb2lab(npa_img).astype("float32")
-    return transforms.ToTensor()(lab_img)
-
-def tensor_to_image(tensor):
-    npa_img = tensor.cpu().numpy().transpose((1, 2, 0))
-    rgb_img = lab2rgb(npa_img).clip(0, 1)
-    img = Image.fromarray((rgb_img * 255).astype(np.uint8), 'RGB')
-    return img
-
 def main(image_index, ckpt_path):
     current_path = os.path.abspath(__file__)
     current_directory = os.path.dirname(current_path)

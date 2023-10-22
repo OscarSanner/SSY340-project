@@ -37,6 +37,7 @@ def calculate_psnr_ssim(gt_paths, coltran_path, ICT_path, eccv16_path, siggraph_
     ens_model.load_state_dict(checkpoint['model_state_dict'])
     ens_model.eval()
 
+    # Used for memory management
     def retrieve_images_in_batches(paths, amount):
         BATCH_SIZE = 100
         all_imgs = []
@@ -46,15 +47,10 @@ def calculate_psnr_ssim(gt_paths, coltran_path, ICT_path, eccv16_path, siggraph_
             all_imgs.append(imgs)
         return torch.cat(all_imgs, dim=0)
 
-    print("Retrieving images")
     gt_imgs = retrieve_images_in_batches(gt_paths, 256).permute(0,3,1,2)
-    print("Retrieving images")
     coltran = retrieve_images_in_batches(coltran_path, 256).permute(0,3,1,2)
-    print("Retrieving images")
     ICT_imgs = retrieve_images_in_batches(ICT_path, 256).permute(0,3,1,2)
-    print("Retrieving images")
     eccv_imgs = retrieve_images_in_batches(eccv16_path, 256).permute(0,3,1,2)
-    print("Retrieving images")
     siggraph_imgs = retrieve_images_in_batches(siggraph_path, 256).permute(0,3,1,2)
 
     combined_imgs = torch.cat([eccv_imgs, siggraph_imgs, ICT_imgs, coltran], dim=1)
@@ -63,11 +59,8 @@ def calculate_psnr_ssim(gt_paths, coltran_path, ICT_path, eccv16_path, siggraph_
     averaged_imgs[0]
 
     def tensor_to_PIL(tensor):
-        # Move tensor to CPU and detach if necessary
         tensor = tensor.cpu().detach()
-        # Convert tensor to [H, W, C] format
         numpy_img = tensor.permute(1, 2, 0).numpy()
-        # Convert numpy array to PIL Image
         return Image.fromarray((numpy_img * 255).astype(np.uint8))
     
     predicted_imgs = []
@@ -88,7 +81,6 @@ def calculate_psnr_ssim(gt_paths, coltran_path, ICT_path, eccv16_path, siggraph_
         filename = os.path.basename(siggraph_path[i])
         open.save(f"dataset/pred_data/ens/{filename}")
         pil_img.save(f"dataset/pred_data/avg/{filename}")
-        
 
         prediction = prediction.permute(1, 2, 0)
 
@@ -98,13 +90,9 @@ def calculate_psnr_ssim(gt_paths, coltran_path, ICT_path, eccv16_path, siggraph_
         # Convert the resulting numpy array back to a PyTorch tensor
         rgb_tensor = torch.from_numpy(rgb_image).permute(2, 0, 1).float()
         rgb_tensor = rgb_tensor * 255
-
-
         predicted_imgs.append(rgb_tensor)
 
     predicted_tensors = torch.stack(predicted_imgs)
-
-    print("Calculating metrics")
     
     predicted_psnr_score = psnr(predicted_tensors, gt_imgs, reduction='mean', data_range=255), 
     predicted_ssim_score = ssim(predicted_tensors, gt_imgs, reduction='mean', data_range=255),
@@ -124,32 +112,12 @@ def calculate_psnr_ssim(gt_paths, coltran_path, ICT_path, eccv16_path, siggraph_
     siggraph_psnr_score = psnr(siggraph_imgs, gt_imgs, reduction='mean', data_range=255), 
     siggraph_ssim_score = ssim(siggraph_imgs, gt_imgs, reduction='mean', data_range=255),
 
-    print(f"Predicted PSNR: {predicted_psnr_score}")
-    print(f"Predicted SSIM: {predicted_ssim_score}")
-    print("---")
-    print(f"Combined PSNR: {combined_psnr_score}")
-    print(f"Combined SSIM: {combined_ssim_score}")
-    print("---")
-    print(f"Coltran PSNR: {coltran_psnr_score}")
-    print(f"Coltran SSIM: {coltran_ssim_score}")
-    print("---")
-    print(f"ICT PSNR: {ict_psnr_score}")
-    print(f"ICT SSIM: {ict_ssim_score}")
-    print("---")
-    print(f"Eccv PSNR: {eccv_psnr_score}")
-    print(f"Eccv SSIM: {eccv_ssim_score}")
-    print("---")
-    print(f"Siggraph PSNR: {siggraph_psnr_score}")
-    print(f"Siggraph SSIM: {siggraph_ssim_score}")
-    
-
     return (combined_psnr_score, combined_ssim_score, coltran_psnr_score, 
             coltran_ssim_score, ict_psnr_score, ict_ssim_score, 
             eccv_psnr_score, eccv_ssim_score, siggraph_psnr_score, 
             siggraph_ssim_score, predicted_ssim_score ,predicted_psnr_score)
 
 def main():
-    
     plot_psnr_ssim_bars()
 
 def plot_psnr_ssim_bars():
