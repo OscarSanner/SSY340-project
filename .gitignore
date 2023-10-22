@@ -5,7 +5,6 @@ __pycache__
 final_model_weights.pt
 out
 weights
-dataset
 .vscode
 *.ckpt
 plot_colorization_*
